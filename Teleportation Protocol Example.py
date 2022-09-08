@@ -4,9 +4,9 @@ from projectq import MainEngine
 
 
 def create_bell_pair(quantum_engine):
-    # Qubit one is 'Alices' qubit, and will be used to create a message state
+    # Qubit one is "Alice's" qubit, and will be used to create a message state
     qubit_one = quantum_engine.allocate_qubit()
-    # Qubit two is 'Bobs' qubit, and will be used to re-create the message state
+    # Qubit two is "Bob's" qubit, and will be used to re-create the message state
     qubit_two = quantum_engine.allocate_qubit()
     ''' 
     Hadamard gate to put Qubit one in superposition
