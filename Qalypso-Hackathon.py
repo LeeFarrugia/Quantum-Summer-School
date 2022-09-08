@@ -16,3 +16,5 @@ c.cx(1,2)
 c.cz(0,2)
 c.draw('mpl')
 plt.show()
+
+
