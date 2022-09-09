@@ -1,5 +1,6 @@
 from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, execute
 from numpy.random import randint
+import matplotlib.pyplot as plt
 import regex as re
 from random_word import RandomWords
 
@@ -87,6 +88,8 @@ for i in range(N):
     circuits.append(cN)
     result = execute(sub_circ, backend=backend, shots=1, memory=True).result()
     results.append(result.get_counts())
+    sub_circ.draw('mpl')
+    plt.show()
 
 # comparing the regex to the result list to compute matching or not
 for i in range(N):
