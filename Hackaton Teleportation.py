@@ -6,7 +6,7 @@ from numpy.random import randint
 
 # creation of teleportation circuit
 
-n = 500
+n = 1
 a_bits = randint(2, size = n)
 a_bases = randint(2, size = n)
 
@@ -28,14 +28,13 @@ def message_sent(bits, bases):
                 c.h(0)
         c.barrier()
         message.append(c)
+        print(c)
     return message
 message = message_sent(a_bits, a_bases)
 print('bit = %i' %a_bits[0])
 print('basis = %i' %a_bases[0])
 
-
 b_bases = randint(2, size = n)
-
 
 def measure_sent(message, bases):
     backend = Aer.get_backend('aer_simulator')
@@ -51,6 +50,7 @@ def measure_sent(message, bases):
         result = aer_sim.run(qobj).result()
         measured_bit = int(result.get_memory()[0])
         measurement.append(measured_bit)
+        print(message)
     return measurement 
 b_result = measure_sent(message, b_bases)
 

@@ -1,19 +1,28 @@
-from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, execute, assemble
-import matplotlib.pyplot as plt
-import numpy as np
+from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister, Aer, execute
 from numpy.random import randint
 import regex as re
+from random_word import RandomWords
 
+# initialise the empty lists to be used later on
 circuits = []
 sendResults = []
 receiveResults = []
 results = []
 sendkey = []
 receivekey= []
+recieve_message_list = []
+end_msg_list = []
+# calling qiskit backend for simulator
 backend = Aer.get_backend('aer_simulator')
+# dictionary for regex patterns
 sr_patterns = [re.compile("'..00"), re.compile("'..01"), re.compile("'..10"), re.compile("'..11")]
 
-N = 500
+# generating the random word and turning it into binary
+r = RandomWords()
+msg = str(r.get_random_word())
+binary_encoded_message = [bin(ord(x))[2:].zfill(8) for x in msg]
+
+N = len(binary_encoded_message)
 
 # create registers
 qr = QuantumRegister(2)
@@ -63,12 +72,15 @@ r3.tdg(qr[1])
 r3.h(qr[1])
 r3.measure(qr[1], cr[1])
 
+# list for all measurements
 sender_measurements = [s1, s2, s3]
 receiver_measurements = [r1, r2, r3]
 
+# random selection of measurement bases
 sender_choices = [randint(1, 4) for i in range(N)]
 receiver_choices = [randint(1, 4) for i in range(N)]
 
+# getting the result for the measurement bases for both sender and receiver
 for i in range(N):
     cN = str(i) + ':S' + str(sender_choices[i]) + '_R'
     sub_circ = singlet_state.compose(sender_measurements[sender_choices[i]-1]).compose(receiver_measurements[receiver_choices[i]-1])
@@ -76,6 +88,7 @@ for i in range(N):
     result = execute(sub_circ, backend=backend, shots=1, memory=True).result()
     results.append(result.get_counts())
 
+# comparing the regex to the result list to compute matching or not
 for i in range(N):
     rescheck = results[i]
     if sr_patterns[0].search(str(rescheck)):
@@ -91,17 +104,17 @@ for i in range(N):
         sendResults.append(-1)
         receiveResults.append(-1)
 
+# if tey select the correct bases this creates a one time pad for them communicate and send data
 for i in range(N):
     if (sender_choices[i] == 2 and receiver_choices[i] == 1) or (sender_choices[i] == 3 and receiver_choices[i] == 2):
         sendkey.append(sendResults[i])
         receivekey.append(- receiveResults[i])
+        for j in range(N):
+            end_msg_list.append(int(binary_encoded_message[j]))
 
-keylength = len(sendkey)
+# printing the original message, along with receiver binary list
+print( msg ,end_msg_list)
 
-srkeymiss = 0
-for j in range(keylength):
-    if sendkey[j] != receivekey[j]:
-        srkeymiss += 1
-
+# prints how long the word used is for the key
+keylength = len(binary_encoded_message)
 print('The key length is: ' + str(keylength))
-print('The mismatch number is: ' + str(srkeymiss))
