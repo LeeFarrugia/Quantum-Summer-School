@@ -89,7 +89,8 @@ for i in range(N):
     result = execute(sub_circ, backend=backend, shots=1, memory=True).result()
     results.append(result.get_counts())
     sub_circ.draw('mpl')
-    plt.show()
+    plt.savefig('Circuits.pdf')
+    print(sub_circ)
 
 # comparing the regex to the result list to compute matching or not
 for i in range(N):
