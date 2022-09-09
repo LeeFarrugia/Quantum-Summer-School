@@ -13,7 +13,7 @@ receivekey= []
 backend = Aer.get_backend('aer_simulator')
 sr_patterns = [re.compile("'..00"), re.compile("'..01"), re.compile("'..10"), re.compile("'..11")]
 
-N = 10
+N = 500
 
 # create registers
 qr = QuantumRegister(2)
@@ -66,9 +66,8 @@ r3.measure(qr[1], cr[1])
 sender_measurements = [s1, s2, s3]
 receiver_measurements = [r1, r2, r3]
 
-sender_choices = [np.random.randint(1, 3) for i in range(N)]
-receiver_choices = [np.random.randint(1, 3) for i in range(N)]
-
+sender_choices = [randint(1, 4) for i in range(N)]
+receiver_choices = [randint(1, 4) for i in range(N)]
 
 for i in range(N):
     cN = str(i) + ':S' + str(sender_choices[i]) + '_R'
@@ -131,15 +130,24 @@ def chsh_corr_value(x):
     total13 = sum(countA1B3)
     total31 = sum(countA3B1)
     total33 = sum(countA3B3)
+    #print(total11, total13, total31, total33)
     expect11 = (countA1B1[0] - countA1B1[1] - countA1B1[2] + countA1B1[3])/total11
     expect13 = (countA1B3[0] - countA1B3[1] - countA1B3[2] + countA1B3[3])/total13
     expect31 = (countA3B1[0] - countA3B1[1] - countA3B1[2] + countA3B1[3])/total31
     expect33 = (countA3B3[0] - countA3B3[1] - countA3B3[2] + countA3B3[3])/total33
+    #print(expect11, expect13, expect31, expect33)
     
     corr = expect11 - expect13 + expect31 + expect33
     
     return corr
 
-print(results)
+
 corr = chsh_corr_value(results)
-print(round(corr,3))
+for i in range(N):
+    x = randint(0,31)
+    x = x + x
+
+print('CHSH correlation value is:' + str(round(corr,3)))
+print('The key length is: ' + str(keylength))
+print('The missmatch number is: ' + str(srkeymiss))
+print('The sender key is: '+ str(x))
