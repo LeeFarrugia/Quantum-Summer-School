@@ -103,51 +103,5 @@ for j in range(keylength):
     if sendkey[j] != receivekey[j]:
         srkeymiss += 1
 
-def chsh_corr_value(x):
-    countA1B1 = [0, 0, 0, 0] 
-    countA1B3 = [0, 0, 0, 0] 
-    countA3B1 = [0, 0, 0, 0] 
-    countA3B3 = [0, 0, 0, 0] 
-    for i in range(N):
-        rescheck = x[i]
-        if (sender_choices[i] == 1 and receiver_choices[i] == 1):
-            for j in range(4):
-                if sr_patterns[j].search(str(rescheck)):
-                    countA1B1[j] += 1
-        if (sender_choices[i] == 1 and receiver_choices[i] == 3):
-            for j in range(4):
-                if sr_patterns[j].search(str(rescheck)):
-                    countA1B3[j] += 1
-        if (sender_choices[i] == 3 and receiver_choices[i] == 1):
-            for j in range(4):
-                if sr_patterns[j].search(str(rescheck)):
-                    countA3B1[j] += 1
-        if (sender_choices[i] == 3 and receiver_choices[i] == 3):
-            for j in range(4):
-                if sr_patterns[j].search(str(rescheck)):
-                    countA3B3[j] += 1
-    total11 = sum(countA1B1)
-    total13 = sum(countA1B3)
-    total31 = sum(countA3B1)
-    total33 = sum(countA3B3)
-    #print(total11, total13, total31, total33)
-    expect11 = (countA1B1[0] - countA1B1[1] - countA1B1[2] + countA1B1[3])/total11
-    expect13 = (countA1B3[0] - countA1B3[1] - countA1B3[2] + countA1B3[3])/total13
-    expect31 = (countA3B1[0] - countA3B1[1] - countA3B1[2] + countA3B1[3])/total31
-    expect33 = (countA3B3[0] - countA3B3[1] - countA3B3[2] + countA3B3[3])/total33
-    #print(expect11, expect13, expect31, expect33)
-    
-    corr = expect11 - expect13 + expect31 + expect33
-    
-    return corr
-
-
-corr = chsh_corr_value(results)
-for i in range(N):
-    x = randint(0,31)
-    x = x + x
-
-print('CHSH correlation value is:' + str(round(corr,3)))
 print('The key length is: ' + str(keylength))
-print('The missmatch number is: ' + str(srkeymiss))
-print('The sender key is: '+ str(x))
+print('The mismatch number is: ' + str(srkeymiss))
