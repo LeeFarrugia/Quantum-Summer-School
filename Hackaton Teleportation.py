@@ -2,14 +2,11 @@ from qiskit import *
 from qiskit import QuantumCircuit 
 from qiskit import Aer
 from qiskit import assemble 
-import matplotlib.pyplot as plt
-import numpy as np 
-from numpy.random import randint 
-import qutip
+from numpy.random import randint
 
 # creation of teleportation circuit
 
-n = 100
+n = 500
 a_bits = randint(2, size = n)
 a_bases = randint(2, size = n)
 
